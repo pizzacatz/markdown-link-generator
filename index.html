@@ -9,37 +9,40 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background: #f9f9f9;
+      background: #121212;
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      color: #eee;
     }
     .container {
       width: 100%;
       max-width: 600px;
       padding: 20px;
       box-sizing: border-box;
-      background: #fff;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      background: #1e1e1e;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
       border-radius: 8px;
     }
     h1 {
       text-align: center;
-      color: #333;
+      color: #fff;
     }
     label, p {
       margin: 8px 0;
-      color: #555;
+      color: #ccc;
     }
     input[type="text"] {
       width: 100%;
       padding: 12px;
       margin-bottom: 12px;
       box-sizing: border-box;
-      border: 1px solid #ccc;
+      border: 1px solid #444;
       border-radius: 4px;
       font-size: 16px;
+      background: #333;
+      color: #eee;
     }
     .input-group {
       display: flex;
@@ -53,15 +56,15 @@
     .input-group button {
       padding: 12px 16px;
       margin-left: 8px;
-      background-color: #4285f4;
-      color: #fff;
+      background-color: #bb86fc;
+      color: #121212;
       border: none;
       border-radius: 4px;
       font-size: 16px;
       cursor: pointer;
     }
     .input-group button:hover {
-      background-color: #357ae8;
+      background-color: #9a67ea;
     }
     @media (max-width: 480px) {
       .input-group {
@@ -78,21 +81,22 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 15px;
-      background: #fff;
+      background: #2a2a2a;
       padding: 10px;
       border-radius: 4px;
-      border: 1px solid #ccc;
+      border: 1px solid #444;
     }
     .toggle-group label {
       margin: 0;
       flex: 1;
       font-size: 16px;
+      color: #ccc;
     }
     .toggle-group input[type="checkbox"] {
       width: 40px;
       height: 20px;
       -webkit-appearance: none;
-      background: #ccc;
+      background: #444;
       outline: none;
       border-radius: 20px;
       position: relative;
@@ -110,7 +114,7 @@
       border-radius: 50%;
       top: 1px;
       left: 1px;
-      background: #fff;
+      background: #eee;
       transition: transform 0.3s;
     }
     .toggle-group input[type="checkbox"]:checked::before {
@@ -120,19 +124,19 @@
       width: 100%;
       padding: 12px;
       margin-bottom: 12px;
-      background-color: #4285f4;
-      color: #fff;
+      background-color: #bb86fc;
+      color: #121212;
       border: none;
       border-radius: 4px;
       font-size: 16px;
       cursor: pointer;
     }
     button.full-width:hover {
-      background-color: #357ae8;
+      background-color: #9a67ea;
     }
     #notification {
       text-align: center;
-      color: green;
+      color: #66bb6a;
       margin-top: 10px;
       font-size: 16px;
     }
@@ -144,7 +148,7 @@
     
     <div>
       <label for="linkText">Link Text:</label>
-      <input type="text" id="linkText" placeholder="Enter link text">
+      <input type="text" id="linkText" placeholder="link">
     </div>
     
     <div>
@@ -155,8 +159,6 @@
       </div>
     </div>
     
-    <!-- Removed the "Add https://" toggle -->
-
     <div class="toggle-group">
       <label for="togglePreview">Hide Preview</label>
       <input type="checkbox" id="togglePreview" checked>
@@ -175,6 +177,9 @@
   <script>
     document.getElementById('generate').addEventListener('click', function() {
       var linkText = document.getElementById('linkText').value.trim();
+      if (!linkText) {
+        linkText = "link";
+      }
       var url = document.getElementById('url').value.trim();
       
       // Automatically prepend "https://" if not present
