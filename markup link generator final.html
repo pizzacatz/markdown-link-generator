@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Link Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #121212;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #eee;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
+      box-sizing: border-box;
+      background: #1e1e1e;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      border-radius: 8px;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+    }
+    label, p {
+      margin: 8px 0;
+      color: #ccc;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+      border: 1px solid #444;
+      border-radius: 4px;
+      font-size: 16px;
+      background: #333;
+      color: #eee;
+    }
+    .input-group {
+      display: flex;
+      align-items: stretch;
+      margin-bottom: 12px;
+    }
+    .input-group input[type="text"] {
+      flex: 1;
+      margin: 0;
+    }
+    .input-group button {
+      padding: 12px 16px;
+      margin-left: 8px;
+      background-color: #bb86fc;
+      color: #121212;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .input-group button:hover {
+      background-color: #9a67ea;
+    }
+    @media (max-width: 480px) {
+      .input-group {
+        flex-direction: column;
+      }
+      .input-group button {
+        margin-left: 0;
+        margin-top: 8px;
+        width: 100%;
+      }
+    }
+    .toggle-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      background: #2a2a2a;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #444;
+    }
+    .toggle-group label {
+      margin: 0;
+      flex: 1;
+      font-size: 16px;
+      color: #ccc;
+    }
+    .toggle-group input[type="checkbox"] {
+      width: 40px;
+      height: 20px;
+      -webkit-appearance: none;
+      background: #444;
+      outline: none;
+      border-radius: 20px;
+      position: relative;
+      transition: background 0.3s;
+      cursor: pointer;
+    }
+    .toggle-group input[type="checkbox"]:checked {
+      background: #66bb6a;
+    }
+    .toggle-group input[type="checkbox"]::before {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      top: 1px;
+      left: 1px;
+      background: #eee;
+      transition: transform 0.3s;
+    }
+    .toggle-group input[type="checkbox"]:checked::before {
+      transform: translateX(20px);
+    }
+    button.full-width {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      background-color: #bb86fc;
+      color: #121212;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button.full-width:hover {
+      background-color: #9a67ea;
+    }
+    #notification {
+      text-align: center;
+      color: #66bb6a;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Markdown Link Generator</h1>
+    
+    <div>
+      <label for="linkText">Link Text:</label>
+      <input type="text" id="linkText" placeholder="link">
+    </div>
+    
+    <div>
+      <label for="url">URL:</label>
+      <div class="input-group">
+          <input type="text" id="url" placeholder="Enter URL">
+          <button id="pasteButton" type="button">Paste</button>
+      </div>
+    </div>
+    
+    <div class="toggle-group">
+      <label for="togglePreview">Hide Preview</label>
+      <input type="checkbox" id="togglePreview" checked>
+    </div>
+    
+    <button id="generate" class="full-width">Generate & Copy Link</button>
+    
+    <div>
+      <label for="output">Output:</label>
+      <input type="text" id="output" readonly>
+    </div>
+    
+    <div id="notification"></div>
+  </div>
+  
+  <script>
+    document.getElementById('generate').addEventListener('click', function() {
+      var linkText = document.getElementById('linkText').value.trim();
+      if (!linkText) {
+        linkText = "link";
+      }
+      var url = document.getElementById('url').value.trim();
+      
+      // Automatically prepend "https://" if not present
+      if (!url.startsWith("https://")) {
+        url = "https://" + url;
+      }
+      
+      // Get the "Hide Preview" toggle value
+      var hidePreview = document.getElementById('togglePreview').checked;
+      
+      // If "Hide Preview" is active, wrap the URL in angle brackets.
+      if (hidePreview) {
+        url = "<" + url + ">";
+      }
+      
+      // Construct the markdown link
+      var markdown = "[" + linkText + "](" + url + ")";
+      
+      // Set the output text
+      document.getElementById('output').value = markdown;
+      // Clear previous notification
+      document.getElementById('notification').textContent = "";
+      
+      // Automatically copy using the fallback method
+      var tempTextArea = document.createElement('textarea');
+      tempTextArea.value = markdown;
+      tempTextArea.style.top = "0";
+      tempTextArea.style.left = "0";
+      tempTextArea.style.position = "fixed";
+      document.body.appendChild(tempTextArea);
+      tempTextArea.focus();
+      tempTextArea.select();
+      
+      try {
+        var successful = document.execCommand('copy');
+        if (successful) {
+          document.getElementById('notification').textContent = "Your link has been copied to your clipboard.";
+        } else {
+          document.getElementById('notification').textContent = "Failed to copy text.";
+        }
+      } catch (err) {
+        document.getElementById('notification').textContent = "Failed to copy text: " + err;
+      }
+      
+      document.body.removeChild(tempTextArea);
+    });
+    
+    document.getElementById('pasteButton').addEventListener('click', function() {
+      navigator.clipboard.readText().then(function(text) {
+        document.getElementById('url').value = text;
+      }).catch(function(err) {
+        var pastedText = prompt("Unable to access clipboard automatically. Please paste your URL:");
+        if (pastedText !== null) {
+          document.getElementById('url').value = pastedText;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
